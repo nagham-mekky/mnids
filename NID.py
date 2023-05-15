@@ -46,6 +46,12 @@ def is_antarctica(packet):
             return True
 
     return False
+def print_ips(packet):
+    ip_src=packet[IP].src
+    ip_dst=packet[IP].dst
+    tcp_sport=packet[TCP].sport
+    tcp_dport=packet[TCP].dport
+    print(f"\tsrc: {ip_src}:{tcp_sport}\n\tdst: {ip_dst}:{tcp_dport}")
 
 def main():
     if len(sys.argv) < 2:
@@ -67,23 +73,29 @@ def main():
     for i in range(len(packets) - 2):
         if is_tcp_stealth(packets[i], packets[i+1], packets[i + 2]):
             print(f"TCP Stealth packet recieved")
+            print_ips(packets[i+2])
             stealth_count += 1
 
     for packet in packets:
         if is_tcp_null(packet):
             print(f"TCP NULL packet recieved")
+            print_ips(packet)
             null_count += 1
         if is_tcp_fin(packet):
             print(f"TCP FIN packet recieved")
+            print_ips(packet)
             fin_count += 1
         if is_tcp_xmas(packet):
             print(f"TCP XMAS packet recieved")
+            print_ips(packet)
             xmas_count += 1
         if is_nikto(packet):
             print(f"Nikto Scanner packet recieved")
+            print_ips(packet)
             nikto_count += 1
         if is_antarctica(packet):
             print(f"Antartica packet recieved")
+            print_ips(packet)
             antarctica_count += 1
 
     print("Summary: ")
